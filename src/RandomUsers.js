@@ -16,31 +16,39 @@ export class RandomUsers extends Component {
   };
 
   setHowManyUsers = e => {
-    let value = parseInt(e.target.value);
-    if (typeof value === "number") {
-      if (value <= 0) {
-        this.setState({
-          errorNumber: true,
-          errorText: "wpisz ilość użytkowników",
-          HowManyUsers: ""
-        });
-      } else if (value > 150) {
-        this.setState({
-          errorNumber: true,
-          errorText: "maksymalna ilość to 150 osób",
-          HowManyUsers: value
-        });
-      } else if (value) {
-        this.setState({
-          errorNumber: false,
-          HowManyUsers: value
-        });
-      }
-    } else if (typeof value === "string") {
+    let textValue = parseInt(e.target.value);
+
+    this.setState({
+      HowManyUsers: textValue,
+      errorNumber: false,
+      errorText: ""
+    });
+    if (isNaN(textValue)) {
       this.setState({
+        HowManyUsers: "",
+        errorNumber: false,
+        errorText: ""
+      });
+    }
+    if (textValue <= 0) {
+      this.setState({
+        HowManyUsers: "",
         errorNumber: true,
-        errorText: "wpisz liczbę",
-        HowManyUsers: value
+        errorText: "podaj liczbę urzytkowników"
+      });
+    }
+    if (textValue > 150) {
+      this.setState({
+        HowManyUsers: textValue,
+        errorNumber: true,
+        errorText: "maksymalna liczba to 150"
+      });
+    }
+    if (typeof textValue === "string") {
+      this.setState({
+        HowManyUsers: textValue,
+        errorNumber: true,
+        errorText: "wpisz liczbę !"
       });
     }
   };
@@ -56,9 +64,11 @@ export class RandomUsers extends Component {
   };
 
   onSubmit = () => {
-    const type = this.state.HowManyUsers;
-
-    if (this.state.HowManyUsers > 0 && this.state.HowManyUsers <= 150) {
+    if (
+      this.state.HowManyUsers > 0 &&
+      this.state.HowManyUsers <= 150 &&
+      typeof this.state.HowManyUsers === "number"
+    ) {
       fetch(`https://randomuser.me/api?results=${this.state.HowManyUsers}`)
         .then(response => response.json())
         .then(data => {
