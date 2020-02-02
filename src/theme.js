@@ -1,5 +1,3 @@
-//theme odpowiada za domyslne style komponentow
-
 import { createMuiTheme } from "@material-ui/core";
 
 export default createMuiTheme({

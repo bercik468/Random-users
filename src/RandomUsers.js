@@ -1,11 +1,8 @@
-//RandomUsers odpowiada za pobieranie z API danych o uzytkownikach i podczas pobierania aktywuje koko loadingu
 import React, { Component } from "react";
 import HowManyUsers from "./HowManyUsers";
 import Loading from "./Loading";
 import { Typography } from "@material-ui/core";
 import UsersList from "./UsersList";
-
-//w komponencie klasowym nie da sie uzywac hookow dlatego nie pobierzemy domyslnych styli z theme itp, tu utworzymy nowy komponent funkcyjny "HowManyUSers"
 
 export class RandomUsers extends Component {
   state = {
@@ -13,10 +10,17 @@ export class RandomUsers extends Component {
     isLoading: false,
     isError: false,
     users: [],
-    checkedUsers: []
+    checkedUsers: [],
+    errorNumber: false
   };
 
-  setHowManyUsers = e => this.setState({ HowManyUsers: e.target.value });
+  setHowManyUsers = e => {
+    if (e.target.value <= 0) {
+      this.setState({ errorNumber: true, HowManyUsers: e.target.value });
+    } else if (e.target.value > 0) {
+      this.setState({ errorNumber: false, HowManyUsers: e.target.value });
+    }
+  };
 
   toggleCheckedUsers = uuid => {
     if (this.state.checkedUsers.includes(uuid)) {
@@ -29,26 +33,41 @@ export class RandomUsers extends Component {
   };
 
   onSubmit = () => {
-    fetch(`https://randomuser.me/api?results=${this.state.HowManyUsers}`)
-      .then(response => response.json())
-      .then(data => {
-        //trzeba pamietać że jak pobierze dobrze dane to isError dajemy na false
-        this.setState({
-          isLoading: false,
-          isError: false,
-          users: data.results
-        });
-      })
-      .catch(() =>
-        this.setState({ isLoading: false, isError: true, HowManyUsers: "" })
-      );
-    this.setState({ isLoading: true, users: [], HowManyUsers: "" });
+    if (this.state.HowManyUsers > 0) {
+      fetch(`https://randomuser.me/api?results=${this.state.HowManyUsers}`)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            isLoading: false,
+            isError: false,
+            users: data.results,
+            errorNumber: false
+          });
+        })
+        .catch(() =>
+          this.setState({
+            isLoading: false,
+            isError: true,
+            HowManyUsers: "",
+            errorNumber: false
+          })
+        );
+      this.setState({
+        isLoading: true,
+        users: [],
+        HowManyUsers: "",
+        errorNumber: false
+      });
+    } else {
+      this.setState({ errorNumber: true });
+    }
   };
 
   render() {
     return (
       <div>
         <HowManyUsers
+          errorNumber={this.state.errorNumber}
           setHowManyUsers={this.setHowManyUsers}
           HowManyUsers={this.state.HowManyUsers}
           onSubmit={this.onSubmit}

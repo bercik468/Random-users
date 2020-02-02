@@ -1,4 +1,3 @@
-//UsersList odpowiada za liste uzytkownikow wywoływaną w RandomUsers
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -31,25 +30,14 @@ const UsersList = props => {
   return (
     <>
       <div className={classes.button}>
-        {!showFavorites ? (
-          <Button
-            onClick={() => setShowFavorites(!showFavorites)}
-            color="secondary"
-            variant="contained"
-          >
-            Pokaż ulubionych
-          </Button>
-        ) : (
-          <Button
-            onClick={() => setShowFavorites(!showFavorites)}
-            color="secondary"
-            variant="contained"
-          >
-            Pokaż wszystkich
-          </Button>
-        )}
+        <Button
+          onClick={() => setShowFavorites(!showFavorites)}
+          color="secondary"
+          variant="contained"
+        >
+          {!showFavorites ? "Pokaż ulubionych" : "Pokaż wszystkich"}
+        </Button>
       </div>
-      {/* //Zoom to jest "transition" odpowiada jak lista ma sie pojawic, nagle czy z jakiejs strony itp...Atrybut w nim zawarty "in" okresla kiedy ma sie pojawić lista, trzeba podac jakis warunek */}
       <Zoom in={props.data.length > 0}>
         <List className={classes.root}>
           {dataToShow.map(user => (
