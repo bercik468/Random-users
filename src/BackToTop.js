@@ -17,7 +17,8 @@ const BackToTop = () => {
     disableHysteresis: true,
     threshold: 100
   });
-  const scrollToTop = () => {
+  const scrollToTop = e => {
+    e.stopPropagation();
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -26,7 +27,7 @@ const BackToTop = () => {
   return (
     <Zoom in={trigger}>
       <div className={classes.root}>
-        <Fab color="secondary" onClick={scrollToTop}>
+        <Fab color="secondary" onClick={e => scrollToTop(e)}>
           <KeyboardArrowUpIcon />
         </Fab>
       </div>

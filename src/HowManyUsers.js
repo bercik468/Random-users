@@ -24,9 +24,9 @@ const HowManyUsers = props => {
           }
         }}
         variant="outlined"
-        label="ilość użytkowników"
+        label="Podaj ilość użytkowników"
         error={props.errorNumber}
-        helperText={`Wpisz ilość użytkowników`}
+        helperText={props.errorText}
         FormHelperTextProps={{ style: { position: "absolute", top: 55 } }}
       />
       <Button

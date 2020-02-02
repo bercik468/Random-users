@@ -11,13 +11,24 @@ export class RandomUsers extends Component {
     isError: false,
     users: [],
     checkedUsers: [],
-    errorNumber: false
+    errorNumber: false,
+    errorText: ""
   };
 
   setHowManyUsers = e => {
     if (e.target.value <= 0) {
-      this.setState({ errorNumber: true, HowManyUsers: e.target.value });
-    } else if (e.target.value > 0) {
+      this.setState({
+        errorNumber: true,
+        errorText: "wpisz ilość użytkowników",
+        HowManyUsers: ""
+      });
+    } else if (e.target.value > 150) {
+      this.setState({
+        errorNumber: true,
+        errorText: "maksymalna ilość to 150 osób",
+        HowManyUsers: e.target.value
+      });
+    } else if (e.target.value) {
       this.setState({ errorNumber: false, HowManyUsers: e.target.value });
     }
   };
@@ -33,7 +44,7 @@ export class RandomUsers extends Component {
   };
 
   onSubmit = () => {
-    if (this.state.HowManyUsers > 0) {
+    if (this.state.HowManyUsers > 0 && this.state.HowManyUsers <= 150) {
       fetch(`https://randomuser.me/api?results=${this.state.HowManyUsers}`)
         .then(response => response.json())
         .then(data => {
@@ -58,7 +69,12 @@ export class RandomUsers extends Component {
         HowManyUsers: "",
         errorNumber: false
       });
-    } else {
+    } else if (this.state.HowManyUsers <= 0) {
+      this.setState({
+        errorNumber: true,
+        errorText: "wpisz ilość użytkowników"
+      });
+    } else if (this.state.HowManyUsers < 150) {
       this.setState({ errorNumber: true });
     }
   };
@@ -67,6 +83,7 @@ export class RandomUsers extends Component {
     return (
       <div>
         <HowManyUsers
+          errorText={this.state.errorText}
           errorNumber={this.state.errorNumber}
           setHowManyUsers={this.setHowManyUsers}
           HowManyUsers={this.state.HowManyUsers}

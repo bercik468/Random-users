@@ -11,14 +11,29 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 
 const useStyles = makeStyles(theme => ({
   avatar: {
-    width: 100,
-    height: 100
+    width: 80,
+    height: 80
   },
   listItem: {
-    cursor: "pointer",
-    "&:hover": { color: "blue" }
+    [theme.breakpoints.up("md")]: {
+      cursor: "pointer",
+      "&:hover": { color: "blue" }
+    }
   },
-  textDiv: { flexGrow: 1 },
+  textDiv: {
+    flexGrow: 1,
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between"
+  },
+  itemTextDiv: {
+    flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "flex-start"
+  },
   checkbox: {
     color: "red"
   }
@@ -43,27 +58,28 @@ const UsersListItem = ({ data, toggleCheckedUsers, checkedUsers }) => {
           />
         </ListItemAvatar>
         <div className={classes.textDiv}>
-          <ListItemText
-            primary={`${data.name.first} ${data.name.last}`}
-            primaryTypographyProps={{
-              variant: "h4",
-              align: "center",
-              style: { marginLeft: 10 }
-            }}
-          />
-          <Collapse in={open}>
-            <List>
-              {[
-                `phone: ${data.phone}`,
-                `email: ${data.email}`,
-                `${data.location.city} ${data.location.street.name} ${data.location.street.number}, ${data.location.country}`
-              ].map(text => (
-                <ListItem key={text}>
-                  <ListItemText secondary={text} />
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
+          <div className={classes.itemTextDiv}>
+            <ListItemText
+              align="center"
+              primary={`${data.name.first} ${data.name.last}`}
+              primaryTypographyProps={{
+                variant: "h5"
+              }}
+            />
+            <Collapse in={open}>
+              <List>
+                {[
+                  `phone: ${data.phone}`,
+                  `city: ${data.location.city}`,
+                  `country: ${data.location.country}`
+                ].map(text => (
+                  <ListItem key={text}>
+                    <ListItemText secondary={text} />
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+          </div>
         </div>
         <Checkbox
           checked={checkedUsers.includes(data.login.uuid)}
@@ -76,6 +92,7 @@ const UsersListItem = ({ data, toggleCheckedUsers, checkedUsers }) => {
           value="cheskedH"
         />
       </ListItem>
+
       <Divider variant="inset" component="li" />
     </>
   );
