@@ -16,20 +16,32 @@ export class RandomUsers extends Component {
   };
 
   setHowManyUsers = e => {
-    if (e.target.value <= 0) {
+    let value = parseInt(e.target.value);
+    if (typeof value === "number") {
+      if (value <= 0) {
+        this.setState({
+          errorNumber: true,
+          errorText: "wpisz ilość użytkowników",
+          HowManyUsers: ""
+        });
+      } else if (value > 150) {
+        this.setState({
+          errorNumber: true,
+          errorText: "maksymalna ilość to 150 osób",
+          HowManyUsers: value
+        });
+      } else if (value) {
+        this.setState({
+          errorNumber: false,
+          HowManyUsers: value
+        });
+      }
+    } else if (typeof value === "string") {
       this.setState({
         errorNumber: true,
-        errorText: "wpisz ilość użytkowników",
-        HowManyUsers: ""
+        errorText: "wpisz liczbę",
+        HowManyUsers: value
       });
-    } else if (e.target.value > 150) {
-      this.setState({
-        errorNumber: true,
-        errorText: "maksymalna ilość to 150 osób",
-        HowManyUsers: e.target.value
-      });
-    } else if (e.target.value) {
-      this.setState({ errorNumber: false, HowManyUsers: e.target.value });
     }
   };
 
@@ -44,6 +56,8 @@ export class RandomUsers extends Component {
   };
 
   onSubmit = () => {
+    const type = this.state.HowManyUsers;
+
     if (this.state.HowManyUsers > 0 && this.state.HowManyUsers <= 150) {
       fetch(`https://randomuser.me/api?results=${this.state.HowManyUsers}`)
         .then(response => response.json())
